@@ -33,7 +33,7 @@ df_costing = pd.read_excel('costing.xlsx')
 
 main_dashboard,costing=st.tabs(["Executive Dashboard","Costing"])
 
-costing.dataframe(df_costing)
+costing.dataframe(df_costing.sort_values('Costing’, ascending=False))
 
 df = df.iloc[1:]
 
