@@ -31,6 +31,10 @@ df_1 = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551
 
 df_costing = pd.read_excel('costing.xlsx')
 
+main_dashboard,costing=st.tabs(["Executive Dashboard","Costing"])
+
+costing.dataframe(df_costing)
+
 df = df.iloc[1:]
 
 df.columns = df.iloc[0]
@@ -95,4 +99,4 @@ df_final = pd.merge(average_payout, count, on='Item_final_name')
 (df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
 
 
-st.write(average_payout)
+main_dashboard.write(average_payout)
