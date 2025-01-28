@@ -5,6 +5,7 @@ Here's our first attempt at using data to create a table:
 
 import streamlit as st
 import pandas as pd
+#import locale
 
 st.header("RASA'S DASHBOARD")
 
@@ -24,15 +25,33 @@ st.header("RASA'S DASHBOARD")
 
 import pandas as pd
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
 
-df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
+#@st.cache_data
+@st.cache_data 
+def load_data():
+    df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
+    return df
+df = load_data() 
+@st.cache_data
+def load_data2():
+    df = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
+    return df
+df_1 = load_data2() 
+@st.cache_data
+def load_data3():
+    df = pd.read_excel('costing.xlsx')
+    return df
+df_costing = load_data3() 
+#@st.cache_data
+#df_1 = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
+#@st.cache_data
+#df_costing = pd.read_excel('costing.xlsx')
 
-df_1 = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
+main_dashboard,costing,item_wise_payout=st.tabs(["Executive Dashboard","Costing","Item Wise Payout"])
 
-df_costing = pd.read_excel('costing.xlsx')
-
-main_dashboard,costing=st.tabs(["Executive Dashboard","Costing"])
-
+costing.header("Costing")
 costing.dataframe(df_costing.sort_values('Costing', ascending=False))
 
 df = df.iloc[1:]
@@ -40,14 +59,25 @@ df = df.iloc[1:]
 df.columns = df.iloc[0]
 df = df[1:]
 
-#Metrics
-col1, col2, col3 = main_dashboard.columns(3)
-col1.metric("Orders", "70 °F", "1.2 °F")
-col2.metric("Sale", "9 mph", "-8%")
-col3.metric("Payout", "86%", "4%")
+
 
 df = df[df['Order Status'] == 'delivered']
 df_1 = df_1[df_1['Order-status'] == 'delivered']
+
+df['Order Date']=pd.to_datetime(df['Order Date'])
+df['Order Date']=df['Order Date'].dt.date
+
+#main_dashboard.dataframe(df.groupby('Order Date').size())
+
+#Metrics
+col1, col2, col3,col8 = main_dashboard.columns(4)
+col1.metric("Orders", len(df))
+col2.metric("Sale", df['Item Total'].sum())
+col3.metric("Payout", round(df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()))
+col8.metric("Payout %", round((df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()/df['Item Total'].sum())*100,2))
+
+
+
 
 df['payout ratio'] = df['Net Payout for Order (after taxes)\n[A-B-C-D]']/df['Item Total']
 
@@ -101,8 +131,26 @@ average_payout = df_melted.groupby('Item_final_name')['avg_payout'].mean().reset
 count = df_melted.groupby('Item_final_name')['avg_payout'].count().reset_index()
 
 df_final = pd.merge(average_payout, count, on='Item_final_name')
+avg_payout=round(df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
 
-(df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
+col4, col5 = main_dashboard.columns(2)
+col4.metric("Avg Payout Per Item", round(avg_payout))
+col5.metric("Avg Orders Per Day",round(df.groupby('Order Date').size().mean()))
 
+col6, col7 = main_dashboard.columns(2)
+number = col6.number_input("Fixed Costs",value=300000)
 
+col7.metric("Target Orders Per Day",round(number/30/1.25/avg_payout))
+
+#df.groupby('Order Date').size().mean()*avg_payout/round(number/30/1.25/avg_payout)
+
+main_dashboard.header("Orders Trend")
+main_dashboard.bar_chart(df.groupby('Order Date').size().reset_index(),x='Order Date')
+#main_dashboard.write(locale.currency(df['Item Total'].sum(), grouping=True))
+
+main_dashboard.header("Sales Trend")
+main_dashboard.bar_chart(df.groupby('Order Date')['Item Total'].sum().reset_index(),x='Order Date')
+
+item_wise_payout.header("Item Wise Payout")
+item_wise_payout.dataframe(average_payout.sort_values('avg_payout', ascending=False))
 #main_dashboard.write(average_payout)
