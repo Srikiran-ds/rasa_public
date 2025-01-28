@@ -40,6 +40,12 @@ df = df.iloc[1:]
 df.columns = df.iloc[0]
 df = df[1:]
 
+#Metrics
+col1, col2, col3 = main_dashboard.columns(3)
+col1.metric("Orders", "70 °F", "1.2 °F")
+col2.metric("Sale", "9 mph", "-8%")
+col3.metric("Payout", "86%", "4%")
+
 df = df[df['Order Status'] == 'delivered']
 df_1 = df_1[df_1['Order-status'] == 'delivered']
 
@@ -99,4 +105,4 @@ df_final = pd.merge(average_payout, count, on='Item_final_name')
 (df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
 
 
-main_dashboard.write(average_payout)
+#main_dashboard.write(average_payout)
