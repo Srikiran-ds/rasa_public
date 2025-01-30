@@ -74,6 +74,9 @@ df_costing = load_data3(uploaded_file_costing)
 
 costing.header("Costing")
 costing.dataframe(df_costing.sort_values('Costing', ascending=False))
+df_costing2=costing.data_editor(df_costing.sort_values('Costing', ascending=False))
+costing.dataframe(df_costing2)
+
 
 df = df.iloc[1:]
 
