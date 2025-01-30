@@ -7,7 +7,7 @@ import streamlit as st
 import pandas as pd
 #import locale
 
-st.header("RASA'S DASHBOARD")
+st.title("RASA'S DASHBOARD")
 
 #reading excelfile
 #from io import StringIO
@@ -91,6 +91,7 @@ df['Order Date']=df['Order Date'].dt.date
 #main_dashboard.dataframe(df.groupby('Order Date').size())
 
 #Metrics
+#main_dashboard.header("Orders Summary")
 col1, col2, col3,col8 = main_dashboard.columns(4)
 col1.metric("Orders", len(df))
 col2.metric("Sale", df['Item Total'].sum())
