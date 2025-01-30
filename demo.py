@@ -128,8 +128,10 @@ if True:
     df['Order Date']=pd.to_datetime(df['Order Date'])
     df['Order Date']=df['Order Date'].dt.date
     col11, col12 = placeholder.columns(2)
-    min_date=col11.date_input("start date",value=df['Order Date'].min(),min_value=df['Order Date'].min(),max_value=df['Order Date'].min())
-    max_date=col12.date_input("end date",value=df['Order Date'].max(),min_value=df['Order Date'].min(),max_value=df['Order Date'].min())
+    min_date=col11.date_input("start date",value=str(df['Order Date'].min()))
+    max_date=col12.date_input("end date",value=str(df['Order Date'].max()))
+    #min_date=col11.date_input("start date",value=df['Order Date'].min(),min_value=df['Order Date'].min(),max_value=df['Order Date'].min())
+    #max_date=col12.date_input("end date",value=df['Order Date'].max(),min_value=df['Order Date'].min(),max_value=df['Order Date'].min())
     placeholder.write(min_date)
     placeholder.write(max_date)
 
