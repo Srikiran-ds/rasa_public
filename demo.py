@@ -83,8 +83,10 @@ df = df[1:]
 
 
 df = df[df['Order Status'] == 'delivered']
+main_dashboard.dataframe(df)
+main_dashboard.dataframe(df_1)
 df_1 = df_1[df_1['Order-status'] == 'delivered']
-
+main_dashboard
 df['Order Date']=pd.to_datetime(df['Order Date'])
 df['Order Date']=df['Order Date'].dt.date
 
