@@ -67,7 +67,7 @@ if True:
 
     main_dashboard,input_files,costing,item_wise_payout=st.tabs(["Executive Dashboard","Input Files","Costing","Item Wise Payout"])
 
-    placeholder = main_dashboard.empty()
+    #placeholder = main_dashboard.empty()
     uploaded_file_annexure = input_files.file_uploader("Choose a annexure file", type = 'xlsx')
     uploaded_file_orders = input_files.file_uploader("Choose a orders file", type = 'xlsx')
     uploaded_file_costing = input_files.file_uploader("Choose a costing file", type = 'xlsx')
@@ -127,13 +127,13 @@ if True:
     #main_dashboard
     df['Order Date']=pd.to_datetime(df['Order Date'])
     df['Order Date']=df['Order Date'].dt.date
-    col11, col12 = placeholder.columns(2)
+    col11, col12 = main_dashboard.columns(2)
     min_date=col11.date_input("start date",value=str(df['Order Date'].min()))
     max_date=col12.date_input("end date",value=str(df['Order Date'].max()))
     #min_date=col11.date_input("start date",value=df['Order Date'].min(),min_value=df['Order Date'].min(),max_value=df['Order Date'].min())
     #max_date=col12.date_input("end date",value=df['Order Date'].max(),min_value=df['Order Date'].min(),max_value=df['Order Date'].min())
-    placeholder.write(min_date)
-    placeholder.write(max_date)
+    main_dashboard.write(min_date)
+    main_dashboard.write(max_date)
 
     #main_dashboard.dataframe(df.groupby('Order Date').size())
 
