@@ -139,11 +139,11 @@ if True:
     #main_dashboard.dataframe(df.groupby('Order Date').size())
 
     #Metrics
-    main_dashboard.header("Orders Summary")
+    main_dashboard.subheader("Orders Summary")
     col1, col2 = main_dashboard.columns(2)
     col1.metric("Orders", len(df))
     col2.metric("Sale", df['Item Total'].sum())
-    main_dashboard.header("Payouts")
+    main_dashboard.subheader("Payouts")
     col3,col8 = main_dashboard.columns(2)
     col3.metric("Payout", round(df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()))
     col8.metric("Payout %", round((df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()/df['Item Total'].sum())*100,2))
@@ -205,11 +205,11 @@ if True:
 
     df_final = pd.merge(average_payout, count, on='Item_final_name')
     avg_payout=round(df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
-    main_dashboard.header("Average Payout and Orders")
+    main_dashboard.subheader("Average Payout and Orders")
     col4, col5 = main_dashboard.columns(2)
     col4.metric("Avg Payout Per Item", round(avg_payout))
     col5.metric("Avg Orders Per Day",round(df.groupby('Order Date').size().mean()))
-    main_dashboard.header("Targets")
+    main_dashboard.subheader("Targets")
     col6, col7 = main_dashboard.columns(2)
     number = col6.number_input("Fixed Costs",value=300000)
 
