@@ -128,7 +128,7 @@ if True:
     df['Order Date']=pd.to_datetime(df['Order Date'])
     df['Order Date']=df['Order Date'].dt.date
     #placeholder.write("hi")
-    placeholder.write(df['Order Date'].min(),"to",df['Order Date'].max())
+    placeholder.write(df['Order Date'].min()+"to"+df['Order Date'].max())
 
     #main_dashboard.dataframe(df.groupby('Order Date').size())
 
