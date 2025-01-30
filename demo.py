@@ -54,7 +54,7 @@ def load_data2(uploaded_file_orders):
     if uploaded_file_orders is None:
         df = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
     else:
-        df = pd.read_excel(uploaded_file_orders)
+        df = pd.read_excel(uploaded_file_orders,skiprows=5)
     return df
 df_1 = load_data2(uploaded_file_orders) 
 @st.cache_data
