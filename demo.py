@@ -31,7 +31,11 @@ warnings.filterwarnings('ignore')
 #@st.cache_data
 @st.cache_data 
 def load_data():
-    df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
+    uploaded_file = st.file_uploader("Choose a annexure file", type = 'xlsx')
+    if uploaded_file is not None:
+        df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
+    else:
+        df = pd.read_excel(uploaded_file, sheet_name='Order Level')
     return df
 df = load_data() 
 @st.cache_data
