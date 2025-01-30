@@ -58,7 +58,7 @@ def load_data2():
     return df
 df_1 = load_data2() 
 @st.cache_data
-def load_data3(uploaded_file_costing):
+def load_data3():
     if uploaded_file_annexure is None:
         df = pd.read_excel('costing.xlsx')
     else:
