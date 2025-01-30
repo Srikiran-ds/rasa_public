@@ -47,7 +47,7 @@ def load_data(uploaded_file_annexure):
     else:
         df = pd.read_excel(uploaded_file_annexure, sheet_name='Order Level')
     return df
-df = load_data() 
+df = load_data(uploaded_file_annexure) 
 #@st.cache_data
 def load_data2(uploaded_file_orders):
     
@@ -56,7 +56,7 @@ def load_data2(uploaded_file_orders):
     else:
         df = pd.read_excel(uploaded_file_orders)
     return df
-df_1 = load_data2() 
+df_1 = load_data2uploaded_file_orders() 
 #@st.cache_data
 def load_data3(uploaded_file_costing):
     if uploaded_file_costing is None:
@@ -64,7 +64,7 @@ def load_data3(uploaded_file_costing):
     else:
         df = pd.read_excel(uploaded_file_costing)
     return df
-df_costing = load_data3() 
+df_costing = load_data3(uploaded_file_costing) 
 #@st.cache_data
 #df_1 = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
 #@st.cache_data
