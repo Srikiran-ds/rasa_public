@@ -132,9 +132,9 @@ if True:
     #max_date=col12.date_input("end date",value=str(df['Order Date'].max()))
     min_date=col11.date_input("start date",value=str(df['Order Date'].min()),min_value=str(df['Order Date'].min()),max_value=str(df['Order Date'].max()))
     max_date=col12.date_input("end date",value=str(df['Order Date'].max()),min_value=str(df['Order Date'].min()),max_value=str(df['Order Date'].max()))
-    main_dashboard.write(min_date)
-    main_dashboard.write(max_date)
-    #df=df[(df['Order Date']>=min_date) & (df['Order Date']<=min_date)]  
+    #main_dashboard.write(min_date)
+    #main_dashboard.write(max_date)
+    df=df[(df['Order Date']>=min_date) & (df['Order Date']<=max_date)]  
 
     #main_dashboard.dataframe(df.groupby('Order Date').size())
 
