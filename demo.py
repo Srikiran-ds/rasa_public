@@ -56,7 +56,7 @@ def load_data2(uploaded_file_orders):
     else:
         df = pd.read_excel(uploaded_file_orders)
     return df
-df_1 = load_data2uploaded_file_orders() 
+df_1 = load_data2(uploaded_file_orders) 
 #@st.cache_data
 def load_data3(uploaded_file_costing):
     if uploaded_file_costing is None:
