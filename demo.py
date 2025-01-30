@@ -5,7 +5,7 @@ Here's our first attempt at using data to create a table:
 
 import streamlit as st
 import pandas as pd
-#import locale
+
 
 st.title("RASA'S DASHBOARD")
 
@@ -28,158 +28,189 @@ import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 
+def creds_entered():
+    if st.session_state["user"].strip() == "rasa" and st.session_state["passwd"].strip()=="key2success" :
+        st.session_state["authenticated"] = True
+    else:
+        st.session_state["authenticated"] = False
+        if not st.session_state["passwd"]:
+            st.warning("Please enter password.")
+        elif not st.session_state["user"]:
+            st.warning("Please enter username.")
+        else:
+            st.error("Invalid username or password")
+
+
+def authenticate_user():
+    if "authenticated" not in st.session_state:
+        st.text_input(label="Username:", value="", key="user", on_change=creds_entered)
+        st.text_input(label="Password", value="", key="passwd", type="password", on_change=creds_entered)
+        return False
+    else:
+        if st.session_state["authenticated"]:
+            return True
+        else:
+            st.text_input(label="Username:", value="", key="user", on_change=creds_entered)
+            st.text_input(label="Password : ", value="", key="passwd", type="password", on_change=creds_entered)
+            return False
+
+
+#if st.session_state["authenticated"]:
+
+if authenticate_user():
+
 #@st.cache_data
 
 # Creating tabs
-main_dashboard,costing,item_wise_payout=st.tabs(["Executive Dashboard","Costing","Item Wise Payout"])
+    main_dashboard,costing,item_wise_payout=st.tabs(["Executive Dashboard","Costing","Item Wise Payout"])
 
-with main_dashboard.expander("Upload files"):
-    uploaded_file_annexure = st.file_uploader("Choose a annexure file", type = 'xlsx')
-    uploaded_file_orders = st.file_uploader("Choose a orders file", type = 'xlsx')
-    uploaded_file_costing = st.file_uploader("Choose a costing file", type = 'xlsx')
-
-
-
-@st.cache_data 
-def load_data(uploaded_file_annexure):
-    if uploaded_file_annexure is None:
-        df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
-    else:
-        df = pd.read_excel(uploaded_file_annexure, sheet_name='Order Level')
-    return df
-df = load_data(uploaded_file_annexure) 
-@st.cache_data
-def load_data2(uploaded_file_orders):
-    
-    if uploaded_file_orders is None:
-        df = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
-    else:
-        df = pd.read_excel(uploaded_file_orders,skiprows=5)
-    return df
-df_1 = load_data2(uploaded_file_orders) 
-@st.cache_data
-def load_data3(uploaded_file_costing):
-    if uploaded_file_costing is None:
-        df = pd.read_excel('costing.xlsx')
-    else:
-        df = pd.read_excel(uploaded_file_costing)
-    return df
-df_costing = load_data3(uploaded_file_costing) 
-#@st.cache_data
-#df_1 = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
-#@st.cache_data
-#df_costing = pd.read_excel('costing.xlsx')
+    with main_dashboard.expander("Upload files"):
+        uploaded_file_annexure = st.file_uploader("Choose a annexure file", type = 'xlsx')
+        uploaded_file_orders = st.file_uploader("Choose a orders file", type = 'xlsx')
+        uploaded_file_costing = st.file_uploader("Choose a costing file", type = 'xlsx')
 
 
 
-costing.header("Costing")
-#costing.dataframe(df_costing.sort_values('Costing', ascending=False))
-#df_costing=
-df_costing=costing.data_editor(df_costing.sort_values('Costing', ascending=False))
-#costing.dataframe(df_costing)
-
-
-df = df.iloc[1:]
-
-df.columns = df.iloc[0]
-df = df[1:]
-
-
-
-df = df[df['Order Status'] == 'delivered']
-#main_dashboard.dataframe(df)
-#main_dashboard.dataframe(df_1)
-df_1 = df_1[df_1['Order-status'] == 'delivered']
-#main_dashboard
-df['Order Date']=pd.to_datetime(df['Order Date'])
-df['Order Date']=df['Order Date'].dt.date
-
-#main_dashboard.dataframe(df.groupby('Order Date').size())
-
-#Metrics
-#main_dashboard.header("Orders Summary")
-col1, col2, col3,col8 = main_dashboard.columns(4)
-col1.metric("Orders", len(df))
-col2.metric("Sale", df['Item Total'].sum())
-col3.metric("Payout", round(df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()))
-col8.metric("Payout %", round((df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()/df['Item Total'].sum())*100,2))
-
+    @st.cache_data 
+    def load_data(uploaded_file_annexure):
+        if uploaded_file_annexure is None:
+            df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
+        else:
+            df = pd.read_excel(uploaded_file_annexure, sheet_name='Order Level')
+        return df
+    df = load_data(uploaded_file_annexure) 
+    @st.cache_data
+    def load_data2(uploaded_file_orders):
+        
+        if uploaded_file_orders is None:
+            df = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
+        else:
+            df = pd.read_excel(uploaded_file_orders,skiprows=5)
+        return df
+    df_1 = load_data2(uploaded_file_orders) 
+    @st.cache_data
+    def load_data3(uploaded_file_costing):
+        if uploaded_file_costing is None:
+            df = pd.read_excel('costing.xlsx')
+        else:
+            df = pd.read_excel(uploaded_file_costing)
+        return df
+    df_costing = load_data3(uploaded_file_costing) 
+    #@st.cache_data
+    #df_1 = pd.read_excel('reports_past_orders_980384_2c0c3fca-b18d-4093-81e5-ea3e551d5c26_2025-01-12_2025-01-18.xlsx')
+    #@st.cache_data
+    #df_costing = pd.read_excel('costing.xlsx')
 
 
 
-df['payout ratio'] = df['Net Payout for Order (after taxes)\n[A-B-C-D]']/df['Item Total']
-
-df_1.rename(columns={ df_1.columns[30]: "item1" }, inplace = True)
-df_1.rename(columns={ df_1.columns[31]: "item2" }, inplace = True)
-df_1.rename(columns={ df_1.columns[32]: "item3" }, inplace = True)
-df_1.rename(columns={ df_1.columns[33]: "item4" }, inplace = True)
-df_1.rename(columns={ df_1.columns[34]: "item5" }, inplace = True)
-df_1.rename(columns={ df_1.columns[35]: "item6" }, inplace = True)
-
-# Reshape the data using melt
-df_melted = df_1.melt(id_vars='Order ID', value_vars=['item1', 'item2', 'item3','item4', 'item5', 'item6'], 
-                    var_name='Item_Column', value_name='Item')
-
-# Filter out empty rows
-df_melted = df_melted.dropna()
-df_melted[['Item_name','temp','Qty','Price']] = df_melted['Item'].str.split("_",expand=True)
-df_melted[['Price','Type','addon']] = df_melted['Price'].str.split("+",expand=True)
-df_melted['Type'] = df_melted['Type'].fillna(value="")
-
-df_melted['Item_final_name'] = df_melted['Item_name']+"_"+df_melted['Qty']+"_"+df_melted['Type']
-df_melted['Price'] = pd.to_numeric(df_melted['Price'], errors='coerce')
-df_melted['Qty'] = pd.to_numeric(df_melted['Qty'], errors='coerce')
+    costing.header("Costing")
+    #costing.dataframe(df_costing.sort_values('Costing', ascending=False))
+    #df_costing=
+    df_costing=costing.data_editor(df_costing.sort_values('Costing', ascending=False))
+    #costing.dataframe(df_costing)
 
 
-def if_price(df):
-    if (df['addon'] == None):
-        return df['Price'] - df['Qty']*10
-    else:
-        return df['Price'] - 20 - df['Qty']*10
-    
-df_melted['Price_final'] = df_melted.apply(if_price, axis = 1)
+    df = df.iloc[1:]
 
-df_temp = df[['Order ID','payout ratio']]
-df_temp['payout ratio'] = pd.to_numeric(df_temp['payout ratio'], errors='coerce')
+    df.columns = df.iloc[0]
+    df = df[1:]
 
 
-df_temp['Order ID'] = df_temp['Order ID'].astype(str)
-df_melted['Order ID'] = df_melted['Order ID'].astype(str)
 
-df_melted = pd.merge(df_melted, df_temp, on='Order ID')
+    df = df[df['Order Status'] == 'delivered']
+    #main_dashboard.dataframe(df)
+    #main_dashboard.dataframe(df_1)
+    df_1 = df_1[df_1['Order-status'] == 'delivered']
+    #main_dashboard
+    df['Order Date']=pd.to_datetime(df['Order Date'])
+    df['Order Date']=df['Order Date'].dt.date
 
-df_melted['payout'] = df_melted['Price_final']*df_melted['payout ratio']
+    #main_dashboard.dataframe(df.groupby('Order Date').size())
 
-df_melted = pd.merge(df_melted, df_costing, how='left',on='Item_name')
-df_melted['Costing']=df_melted['Costing'].fillna(100)
+    #Metrics
+    #main_dashboard.header("Orders Summary")
+    col1, col2, col3,col8 = main_dashboard.columns(4)
+    col1.metric("Orders", len(df))
+    col2.metric("Sale", df['Item Total'].sum())
+    col3.metric("Payout", round(df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()))
+    col8.metric("Payout %", round((df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()/df['Item Total'].sum())*100,2))
 
-df_melted['avg_payout'] = df_melted['payout'] - df_melted['Costing']
 
 
-average_payout = df_melted.groupby('Item_final_name')['avg_payout'].mean().reset_index()
-count = df_melted.groupby('Item_final_name')['avg_payout'].count().reset_index()
 
-df_final = pd.merge(average_payout, count, on='Item_final_name')
-avg_payout=round(df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
+    df['payout ratio'] = df['Net Payout for Order (after taxes)\n[A-B-C-D]']/df['Item Total']
 
-col4, col5 = main_dashboard.columns(2)
-col4.metric("Avg Payout Per Item", round(avg_payout))
-col5.metric("Avg Orders Per Day",round(df.groupby('Order Date').size().mean()))
+    df_1.rename(columns={ df_1.columns[30]: "item1" }, inplace = True)
+    df_1.rename(columns={ df_1.columns[31]: "item2" }, inplace = True)
+    df_1.rename(columns={ df_1.columns[32]: "item3" }, inplace = True)
+    df_1.rename(columns={ df_1.columns[33]: "item4" }, inplace = True)
+    df_1.rename(columns={ df_1.columns[34]: "item5" }, inplace = True)
+    df_1.rename(columns={ df_1.columns[35]: "item6" }, inplace = True)
 
-col6, col7 = main_dashboard.columns(2)
-number = col6.number_input("Fixed Costs",value=300000)
+    # Reshape the data using melt
+    df_melted = df_1.melt(id_vars='Order ID', value_vars=['item1', 'item2', 'item3','item4', 'item5', 'item6'], 
+                        var_name='Item_Column', value_name='Item')
 
-col7.metric("Target Orders Per Day",round(number/30/1.25/avg_payout))
+    # Filter out empty rows
+    df_melted = df_melted.dropna()
+    df_melted[['Item_name','temp','Qty','Price']] = df_melted['Item'].str.split("_",expand=True)
+    df_melted[['Price','Type','addon']] = df_melted['Price'].str.split("+",expand=True)
+    df_melted['Type'] = df_melted['Type'].fillna(value="")
 
-#df.groupby('Order Date').size().mean()*avg_payout/round(number/30/1.25/avg_payout)
+    df_melted['Item_final_name'] = df_melted['Item_name']+"_"+df_melted['Qty']+"_"+df_melted['Type']
+    df_melted['Price'] = pd.to_numeric(df_melted['Price'], errors='coerce')
+    df_melted['Qty'] = pd.to_numeric(df_melted['Qty'], errors='coerce')
 
-main_dashboard.header("Orders Trend")
-main_dashboard.bar_chart(df.groupby('Order Date').size().reset_index(),x='Order Date')
-#main_dashboard.write(locale.currency(df['Item Total'].sum(), grouping=True))
 
-main_dashboard.header("Sales Trend")
-main_dashboard.bar_chart(df.groupby('Order Date')['Item Total'].sum().reset_index(),x='Order Date')
+    def if_price(df):
+        if (df['addon'] == None):
+            return df['Price'] - df['Qty']*10
+        else:
+            return df['Price'] - 20 - df['Qty']*10
+        
+    df_melted['Price_final'] = df_melted.apply(if_price, axis = 1)
 
-item_wise_payout.header("Item Wise Payout")
-item_wise_payout.dataframe(average_payout.sort_values('avg_payout', ascending=False))
-#main_dashboard.write(average_payout)
+    df_temp = df[['Order ID','payout ratio']]
+    df_temp['payout ratio'] = pd.to_numeric(df_temp['payout ratio'], errors='coerce')
+
+
+    df_temp['Order ID'] = df_temp['Order ID'].astype(str)
+    df_melted['Order ID'] = df_melted['Order ID'].astype(str)
+
+    df_melted = pd.merge(df_melted, df_temp, on='Order ID')
+
+    df_melted['payout'] = df_melted['Price_final']*df_melted['payout ratio']
+
+    df_melted = pd.merge(df_melted, df_costing, how='left',on='Item_name')
+    df_melted['Costing']=df_melted['Costing'].fillna(100)
+
+    df_melted['avg_payout'] = df_melted['payout'] - df_melted['Costing']
+
+
+    average_payout = df_melted.groupby('Item_final_name')['avg_payout'].mean().reset_index()
+    count = df_melted.groupby('Item_final_name')['avg_payout'].count().reset_index()
+
+    df_final = pd.merge(average_payout, count, on='Item_final_name')
+    avg_payout=round(df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
+
+    col4, col5 = main_dashboard.columns(2)
+    col4.metric("Avg Payout Per Item", round(avg_payout))
+    col5.metric("Avg Orders Per Day",round(df.groupby('Order Date').size().mean()))
+
+    col6, col7 = main_dashboard.columns(2)
+    number = col6.number_input("Fixed Costs",value=300000)
+
+    col7.metric("Target Orders Per Day",round(number/30/1.25/avg_payout))
+
+    #df.groupby('Order Date').size().mean()*avg_payout/round(number/30/1.25/avg_payout)
+
+    main_dashboard.header("Orders Trend")
+    main_dashboard.bar_chart(df.groupby('Order Date').size().reset_index(),x='Order Date')
+    #main_dashboard.write(locale.currency(df['Item Total'].sum(), grouping=True))
+
+    main_dashboard.header("Sales Trend")
+    main_dashboard.bar_chart(df.groupby('Order Date')['Item Total'].sum().reset_index(),x='Order Date')
+
+    item_wise_payout.header("Item Wise Payout")
+    item_wise_payout.dataframe(average_payout.sort_values('avg_payout', ascending=False))
+    #main_dashboard.write(average_payout)
