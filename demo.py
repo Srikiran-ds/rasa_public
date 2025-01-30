@@ -33,7 +33,7 @@ warnings.filterwarnings('ignore')
 # Creating tabs
 main_dashboard,costing,item_wise_payout=st.tabs(["Executive Dashboard","Costing","Item Wise Payout"])
 
-with st.expander("Upload files"):
+with main_dashboard.expander("Upload files"):
     uploaded_file_annexure = st.file_uploader("Choose a annexure file", type = 'xlsx')
     uploaded_file_orders = st.file_uploader("Choose a orders file", type = 'xlsx')
     uploaded_file_costing = st.file_uploader("Choose a costing file", type = 'xlsx')
