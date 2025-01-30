@@ -150,7 +150,7 @@ df_melted = pd.merge(df_melted, df_temp, on='Order ID')
 
 df_melted['payout'] = df_melted['Price_final']*df_melted['payout ratio']
 
-df_melted = pd.merge(df_melted, df_costing, on='Item_final_name')
+df_melted = pd.merge(df_melted, df_costing, on='Item_name')
 
 df_melted['avg_payout'] = df_melted['payout'] - df_melted['Costing']
 
