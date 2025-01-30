@@ -62,12 +62,13 @@ if authenticate_user():
 #@st.cache_data
 
 # Creating tabs
-    main_dashboard,costing,item_wise_payout=st.tabs(["Executive Dashboard","Costing","Item Wise Payout"])
 
-    with main_dashboard.expander("Upload files"):
-        uploaded_file_annexure = st.file_uploader("Choose a annexure file", type = 'xlsx')
-        uploaded_file_orders = st.file_uploader("Choose a orders file", type = 'xlsx')
-        uploaded_file_costing = st.file_uploader("Choose a costing file", type = 'xlsx')
+    main_dashboard,input_files,costing,item_wise_payout=st.tabs(["Executive Dashboard","Input Files","Costing","Item Wise Payout"])
+
+    placeholder = main_dashboard.empty()
+    uploaded_file_annexure = input_files.file_uploader("Choose a annexure file", type = 'xlsx')
+    uploaded_file_orders = input_files.file_uploader("Choose a orders file", type = 'xlsx')
+    uploaded_file_costing = input_files.file_uploader("Choose a costing file", type = 'xlsx')
 
 
 
@@ -124,14 +125,18 @@ if authenticate_user():
     #main_dashboard
     df['Order Date']=pd.to_datetime(df['Order Date'])
     df['Order Date']=df['Order Date'].dt.date
+    placeholder.write("hi")
+    #placeholder.write(df['Order Date'].min(),"to",df['Order Date'].max())
 
     #main_dashboard.dataframe(df.groupby('Order Date').size())
 
     #Metrics
-    #main_dashboard.header("Orders Summary")
-    col1, col2, col3,col8 = main_dashboard.columns(4)
+    main_dashboard.header("Orders Summary")
+    col1, col2 = main_dashboard.columns(2)
     col1.metric("Orders", len(df))
     col2.metric("Sale", df['Item Total'].sum())
+    main_dashboard.header("Payouts")
+    col3,col8 = main_dashboard.columns(2)
     col3.metric("Payout", round(df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()))
     col8.metric("Payout %", round((df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()/df['Item Total'].sum())*100,2))
 
@@ -192,11 +197,11 @@ if authenticate_user():
 
     df_final = pd.merge(average_payout, count, on='Item_final_name')
     avg_payout=round(df_final['avg_payout_x']*df_final['avg_payout_y']).sum()/sum(df_final['avg_payout_y'])
-
+    main_dashboard.header("Average Payout and Orders")
     col4, col5 = main_dashboard.columns(2)
     col4.metric("Avg Payout Per Item", round(avg_payout))
     col5.metric("Avg Orders Per Day",round(df.groupby('Order Date').size().mean()))
-
+    main_dashboard.header("Targets")
     col6, col7 = main_dashboard.columns(2)
     number = col6.number_input("Fixed Costs",value=300000)
 
