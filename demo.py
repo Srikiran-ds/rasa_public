@@ -41,7 +41,7 @@ with main_dashboard.expander("Upload files"):
 
 
 #@st.cache_data 
-def load_data():
+def load_data(uploaded_file_annexure):
     if uploaded_file_annexure is None:
         df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
     else:
