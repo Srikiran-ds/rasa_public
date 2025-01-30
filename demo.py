@@ -40,7 +40,7 @@ with main_dashboard.expander("Upload files"):
 
 
 
-#@st.cache_data 
+@st.cache_data 
 def load_data(uploaded_file_annexure):
     if uploaded_file_annexure is None:
         df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
@@ -48,7 +48,7 @@ def load_data(uploaded_file_annexure):
         df = pd.read_excel(uploaded_file_annexure, sheet_name='Order Level')
     return df
 df = load_data(uploaded_file_annexure) 
-#@st.cache_data
+@st.cache_data
 def load_data2(uploaded_file_orders):
     
     if uploaded_file_orders is None:
@@ -57,7 +57,7 @@ def load_data2(uploaded_file_orders):
         df = pd.read_excel(uploaded_file_orders)
     return df
 df_1 = load_data2(uploaded_file_orders) 
-#@st.cache_data
+@st.cache_data
 def load_data3(uploaded_file_costing):
     if uploaded_file_costing is None:
         df = pd.read_excel('costing.xlsx')
