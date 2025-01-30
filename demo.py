@@ -54,7 +54,7 @@ def authenticate_user():
             st.text_input(label="Username:", value="", key="user", on_change=creds_entered)
             st.text_input(label="Password : ", value="", key="passwd", type="password", on_change=creds_entered)
             return False
-*/
+
 
 #if st.session_state["authenticated"]:
 """
