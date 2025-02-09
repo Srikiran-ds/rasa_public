@@ -65,7 +65,7 @@ if True:
 
 # Creating tabs
 
-    main_dashboard,input_files,costing,item_wise_payout=st.tabs(["Executive Dashboard","Input Files","Costing","Item Wise Payout"])
+    main_dashboard,input_files,costing,item_wise_payout=st.tabs(["Executive Dashboard","Input Files","Costing","Item Wise Analysis"])
 
     #placeholder = main_dashboard.empty()
     uploaded_file_annexure = input_files.file_uploader("Choose a annexure file", type = 'xlsx',accept_multiple_files=True)
@@ -247,8 +247,10 @@ if True:
 
 
     def if_price(df):
-        if (df['addon'] == None):
+        if (df['addon'] == 'Gulab Jamun'):
             return df['Price'] - df['Qty']*10
+        elif (df['addon'] == 'Chicken Dum Piece'):
+            return df['Price'] - df['Qty']*80
         else:
             return df['Price'] - 20 - df['Qty']*10
         
@@ -264,7 +266,9 @@ if True:
     df_melted = pd.merge(df_melted, df_temp, on='Order ID')
 
     df_melted['payout'] = df_melted['Price_final']*df_melted['payout ratio']
-
+    #Top Items analysis
+    #unique_items = df_melted['Item_final_name'].unique()
+    item_counts = df_melted['Item_final_name'].value_counts()
     df_melted = pd.merge(df_melted, df_costing, how='left',on='Item_final_name')
     df_melted['Costing']=df_melted['Costing'].fillna(100)
 
@@ -294,7 +298,9 @@ if True:
 
     main_dashboard.header("Sales Trend")
     main_dashboard.bar_chart(df.groupby('Order Date')['Item Total'].sum().reset_index(),x='Order Date')
-
+    #item_counts
+    item_wise_payout.header("Top Items By Orders")
+    item_wise_payout.dataframe(item_counts)
     item_wise_payout.header("Item Wise Payout")
     item_wise_payout.dataframe(average_payout.sort_values('avg_payout', ascending=False))
     #main_dashboard.write(average_payout)
