@@ -127,7 +127,7 @@ if True:
     df_costing=costing.data_editor(df_costing.sort_values('Costing', ascending=False))
     #costing.dataframe(df_costing)
 
-    main_dashboard.dataframe(df)
+    #main_dashboard.dataframe(df)
     df = df.iloc[1:]
 
     df.columns = df.iloc[0]
