@@ -68,7 +68,7 @@ if True:
     main_dashboard,input_files,costing,item_wise_payout=st.tabs(["Executive Dashboard","Input Files","Costing","Item Wise Payout"])
 
     #placeholder = main_dashboard.empty()
-    uploaded_file_annexure = input_files.file_uploader("Choose a annexure file", type = 'xlsx')
+    uploaded_file_annexure = input_files.file_uploader("Choose a annexure file", type = 'xlsx',accept_multiple_files=True)
     uploaded_file_orders = input_files.file_uploader("Choose a orders file", type = 'xlsx')
     uploaded_file_costing = input_files.file_uploader("Choose a costing file", type = 'xlsx')
 
