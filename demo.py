@@ -170,6 +170,55 @@ if True:
 
 
     df['payout ratio'] = df['Net Payout for Order (after taxes)\n[A-B-C-D]']/df['Item Total']
+    ######Order slot analysis######
+    #removing empty datetime rows
+
+    df_ordercleaned = df_1[df_1['Order-acceptance-time <placed_time>'].notna()]
+
+    # Define the timeslots
+    timeslots = [
+        ('Lunch', '12:00', '16:00'),
+        ('Evening', '16:00', '19:00'),
+        ('Dinner', '19:00', '23:00'),
+        ('Late Dinner1', '23:00', '23:59'),
+        ('Late Dinner2', '00:00', '03:00')
+    ]
+
+    # Function to count datetime entries in each timeslot
+    def count_by_timeslot(df, timeslots):
+        counts = {slot[0]: 0 for slot in timeslots}
+    
+        for index, row in df.iterrows():
+            time = row['Order-acceptance-time <placed_time>'].time()
+        
+            for slot in timeslots:
+                start_time = pd.to_datetime(slot[1]).time()
+                end_time = pd.to_datetime(slot[2]).time()
+            
+                if start_time <= time < end_time:
+                    counts[slot[0]] += 1
+        return counts
+
+    # Get the counts
+    counts = count_by_timeslot(df_ordercleaned, timeslots)
+
+    #Combining Late night dinner orders
+    counts['Late Dinner'] = counts['Late Dinner1'] + counts['Late Dinner2']
+    del counts['Late Dinner1']
+    del counts['Late Dinner2']
+
+    print(counts)
+
+    # Calculate the total number of orders
+    total_orders = sum(counts.values())
+
+    # Calculate the percentage of each timeslot
+    percentages = {timeslot: (count / total_orders) * 100 for timeslot, count in counts.items()}
+
+    # Print the percentages
+    for timeslot, percentage in percentages.items():
+        print(f"{timeslot}: {percentage:.2f}%")
+
 
     df_1.rename(columns={ df_1.columns[30]: "item1" }, inplace = True)
     df_1.rename(columns={ df_1.columns[31]: "item2" }, inplace = True)
