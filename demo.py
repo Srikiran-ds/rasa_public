@@ -79,10 +79,14 @@ if True:
         if uploaded_file_annexure is None:
             df = pd.read_excel('invoice_Annexure_980384_22012025_1737568230083.xlsx', sheet_name='Order Level') 
         else:
-            df = pd.read_excel(uploaded_file_annexure, sheet_name='Order Level')
+            for uploaded_file in uploaded_file_annexure:
+                df = pd.read_excel(uploaded_file, sheet_name='Order Level')
         return df
-    #for uploaded_file in uploaded_file_annexure:
-    df = load_data(uploaded_file) 
+
+
+    # Can be used wherever a "file-like" object is accepted:
+    dataframe = pd.read_csv(uploaded_file)
+    st.write(dataframe)
     @st.cache_data
     def load_data2(uploaded_file_orders):
         
