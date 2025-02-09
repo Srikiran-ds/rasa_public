@@ -81,7 +81,7 @@ if True:
         else:
             df = pd.read_excel(uploaded_file_annexure, sheet_name='Order Level')
         return df
-    df = load_data(uploaded_file_annexure) 
+    df = load_data(for uploaded in uploaded_file_annexure) 
     @st.cache_data
     def load_data2(uploaded_file_orders):
         
