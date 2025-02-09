@@ -160,7 +160,7 @@ if True:
     col1, col2,col1_3 = main_dashboard.columns(3)
     col1.metric("Orders", len(df))
     col2.metric("Sale", df['Item Total'].sum())
-    col1_3.metric("Cancelled Orders(%)", round(Cancelled_perc*100),2)
+    col1_3.metric("Cancelled Orders(%)", round(Cancelled_perc*100,2))
     main_dashboard.subheader("Payouts")
     col3,col8 = main_dashboard.columns(2)
     col3.metric("Payout", round(df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()))
@@ -218,7 +218,7 @@ if True:
     percentages = {timeslot: (count / total_orders) * 100 for timeslot, count in counts.items()}
 
     # Print the percentages
-    main_dashboard.write("Slot-Wise Split")
+    main_dashboard.subheader("Slot-Wise Split")
     #main_dashboard.write(percentages)
     for timeslot, percentage in percentages.items():
         main_dashboard.write(f"{timeslot}: {percentage:.2f}%")
