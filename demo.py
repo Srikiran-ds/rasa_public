@@ -136,8 +136,7 @@ if True:
 
     #Cancelled order %
     Cancelled_perc = len(df_1[df_1['Order-status'] == 'cancelled'])/len(df_1[df_1['Order-status'] == 'delivered'])
-    main_dashboard.write("cancelled orders")
-    main_dashboard.write(Cancelled_perc*100)
+
     df = df[df['Order Status'] == 'delivered']
     #main_dashboard.dataframe(df)
     #main_dashboard.dataframe(df_1)
@@ -158,9 +157,12 @@ if True:
 
     #Metrics
     main_dashboard.subheader("Orders Summary")
-    col1, col2 = main_dashboard.columns(2)
+    col1, col2,col1_3 = main_dashboard.columns(3)
     col1.metric("Orders", len(df))
     col2.metric("Sale", df['Item Total'].sum())
+    main_dashboard.write("cancelled orders")
+    main_dashboard.write(Cancelled_perc*100)
+    col1_3.metric("Cancelled Orders(%)", Cancelled_perc*100)
     main_dashboard.subheader("Payouts")
     col3,col8 = main_dashboard.columns(2)
     col3.metric("Payout", round(df['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()))
@@ -207,8 +209,8 @@ if True:
     del counts['Late Dinner1']
     del counts['Late Dinner2']
 
-    main_dashboard.write("counts")
-    main_dashboard.write(counts)
+    #main_dashboard.write("counts")
+    #main_dashboard.write(counts)
     
 
     # Calculate the total number of orders
@@ -218,6 +220,8 @@ if True:
     percentages = {timeslot: (count / total_orders) * 100 for timeslot, count in counts.items()}
 
     # Print the percentages
+    main_dashboard.write("Slot-Wise Split")
+    main_dashboard.write(percentages)
     for timeslot, percentage in percentages.items():
         main_dashboard.write(f"{timeslot}: {percentage:.2f}%")
 
