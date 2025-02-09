@@ -212,7 +212,7 @@ if True:
 
     df_melted['payout'] = df_melted['Price_final']*df_melted['payout ratio']
 
-    df_melted = pd.merge(df_melted, df_costing, how='left',on='Item_name')
+    df_melted = pd.merge(df_melted, df_costing, how='left',on='Item_final_name')
     df_melted['Costing']=df_melted['Costing'].fillna(100)
 
     df_melted['avg_payout'] = df_melted['payout'] - df_melted['Costing']
