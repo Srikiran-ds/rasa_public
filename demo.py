@@ -207,7 +207,9 @@ if True:
     del counts['Late Dinner1']
     del counts['Late Dinner2']
 
-    print(counts)
+    main_dashboard.write("counts")
+    main_dashboard.write(counts)
+    
 
     # Calculate the total number of orders
     total_orders = sum(counts.values())
@@ -217,7 +219,7 @@ if True:
 
     # Print the percentages
     for timeslot, percentage in percentages.items():
-        print(f"{timeslot}: {percentage:.2f}%")
+        main_dashboard.write(f"{timeslot}: {percentage:.2f}%")
 
 
     df_1.rename(columns={ df_1.columns[30]: "item1" }, inplace = True)
