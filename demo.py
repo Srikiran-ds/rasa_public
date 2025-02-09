@@ -82,11 +82,7 @@ if True:
             for uploaded_file in uploaded_file_annexure:
                 df = pd.read_excel(uploaded_file, sheet_name='Order Level')
         return df
-
-
-    # Can be used wherever a "file-like" object is accepted:
-    dataframe = pd.read_csv(uploaded_file)
-    st.write(dataframe)
+    df=load_data(uploaded_file_annexure)
     @st.cache_data
     def load_data2(uploaded_file_orders):
         
