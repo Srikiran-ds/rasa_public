@@ -134,7 +134,10 @@ if True:
     df = df[1:]
 
 
-
+    #Cancelled order %
+    Cancelled_perc = len(df_1[df_1['Order-status'] == 'cancelled'])/len(df_1[df_1['Order-status'] == 'delivered'])
+    main_dashboard.write("cancelled orders")
+    main_dashboard.write(Cancelled_perc*100)
     df = df[df['Order Status'] == 'delivered']
     #main_dashboard.dataframe(df)
     #main_dashboard.dataframe(df_1)
