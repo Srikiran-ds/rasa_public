@@ -292,7 +292,7 @@ if True:
     number_cost = col6.number_input("Fixed Costs",value=300000)
     offline = col6.number_input("Offline",value=50000)
 
-    col7.metric("Target Orders Per Day",round((number_cost-offline)/30/1.25/avg_payout))
+    col7.metric("Target Orders Per Day",round((number_cost-offline)/30/1.7/avg_payout))
 
     #df.groupby('Order Date').size().mean()*avg_payout/round(number/30/1.25/avg_payout)
 
