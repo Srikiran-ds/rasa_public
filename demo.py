@@ -270,7 +270,10 @@ if True:
     #unique_items = df_melted['Item_final_name'].unique()
     item_counts = df_melted['Item_final_name'].value_counts()
     df_melted = pd.merge(df_melted, df_costing, how='left',on='Item_final_name')
-    df_melted['Costing']=df_melted['Costing'].fillna()
+    number = costing.number_input(
+    "Default Costing", value=50, placeholder="Type a number..."
+)
+    df_melted['Costing']=df_melted['Costing'].fillna(number)
 
     df_melted['avg_payout'] = df_melted['payout'] - df_melted['Costing']
 
