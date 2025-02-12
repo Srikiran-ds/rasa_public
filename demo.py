@@ -238,10 +238,10 @@ if True:
     # Filter out empty rows
     df_melted = df_melted.dropna()
     df_melted[['Item_name','temp','Qty','Price']] = df_melted['Item'].str.split("_",expand=True)
-    df_melted[['Price','Type','addon']] = df_melted['Price'].str.split("+",expand=True)
-    df_melted['Type'] = df_melted['Type'].fillna(value="")
-
-    df_melted['Item_final_name'] = df_melted['Item_name']+"_"+df_melted['Qty']+"_"+df_melted['Type']
+    #df_melted[['Price','Type','addon']] = df_melted['Price'].str.split("+",expand=True)
+    #df_melted['Type'] = df_melted['Type'].fillna(value="")
+    df_melted['Item_final_name'] = df_melted['Item_name']
+    #df_melted['Item_final_name'] = df_melted['Item_name']+"_"+df_melted['Qty']+"_"+df_melted['Type']
     df_melted['Price'] = pd.to_numeric(df_melted['Price'], errors='coerce')
     df_melted['Qty'] = pd.to_numeric(df_melted['Qty'], errors='coerce')
 
@@ -254,8 +254,8 @@ if True:
         else:
             return df['Price'] - 20 - df['Qty']*10
         
-    df_melted['Price_final'] = df_melted.apply(if_price, axis = 1)
-
+    #df_melted['Price_final'] = df_melted.apply(if_price, axis = 1)
+    df_melted['Price_final'] =df_melted['Price'] 
     df_temp = df[['Order ID','payout ratio']]
     df_temp['payout ratio'] = pd.to_numeric(df_temp['payout ratio'], errors='coerce')
 
