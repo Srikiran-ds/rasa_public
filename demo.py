@@ -159,7 +159,7 @@ if True:
     main_dashboard.subheader("Orders Summary")
     col1, col2,col1_3 = main_dashboard.columns(3)
     col1.metric("Orders", len(df))
-    col2.metric("Sale", df['Item Total'].sum().round(2)
+    col2.metric("Sale", df['Item Total'].sum().round(2))
     col1_3.metric("Cancelled Orders(%)", round(Cancelled_perc*100,2))
     main_dashboard.subheader("Payouts")
     col3,col8 = main_dashboard.columns(2)
