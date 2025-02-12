@@ -159,7 +159,7 @@ if True:
     main_dashboard.subheader("Orders Summary")
     col1, col2,col1_3 = main_dashboard.columns(3)
     col1.metric("Orders", len(df))
-    col2.metric("Sale", df['Item Total'].sum())
+    col2.metric("Sale", df['Item Total'].sum().round(2)
     col1_3.metric("Cancelled Orders(%)", round(Cancelled_perc*100,2))
     main_dashboard.subheader("Payouts")
     col3,col8 = main_dashboard.columns(2)
@@ -270,7 +270,7 @@ if True:
     #unique_items = df_melted['Item_final_name'].unique()
     item_counts = df_melted['Item_final_name'].value_counts()
     df_melted = pd.merge(df_melted, df_costing, how='left',on='Item_final_name')
-    df_melted['Costing']=df_melted['Costing'].fillna(100)
+    df_melted['Costing']=df_melted['Costing'].fillna()
 
     df_melted['avg_payout'] = df_melted['payout'] - df_melted['Costing']
 
