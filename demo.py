@@ -348,7 +348,8 @@ if True:
     #% Swiggy one % orders
     Swiggy_one_perc = len(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0])/len(df_coupon)
     discount.subheader("Swiggy One Share")
-    discount.write(round(Swiggy_one_perc*100,2))
+    #discount.write(round(Swiggy_one_perc*100,2))
+    discount.metric("Swiggy One Share", round(Swiggy_one_perc*100,2))
     #print(round(Swiggy_one_perc*100,2))
     
     #% Swiggy one vs Non-swiggy one
@@ -356,13 +357,15 @@ if True:
     non_swiggyone_payout = df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']==0]['payout ratio'].mean()
     
     diff_payout_swiggyone = non_swiggyone_payout - swiggyone_payout
-    discount.subheader("Swiggy One Additional Discount %")
-    discount.write(round(diff_payout_swiggyone*100,2))
+    #discount.subheader("Swiggy One Additional Discount %")
+    #discount.write(round(diff_payout_swiggyone*100,2))
+    discount.metric("Swiggy One Additional Discount %", round(diff_payout_swiggyone*100,2))
     #print(round(diff_payout_swiggyone*100,2))
     
     #Swiggyone_payout lost profit
-    df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()*diff_payout_swiggyone
+    #df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()*diff_payout_swiggyone
     discount.subheader("Swiggy One Additional Discount")
-    discount.write(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum())
+    discount.write(round(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum(),2))
+    discount.metric("Swiggy One Additional Discount", round(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum(),2))
     #print(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum())
     ####################################################################################################################################
