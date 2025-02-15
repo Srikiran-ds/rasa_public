@@ -347,7 +347,7 @@ if True:
     ####Swiggyone impact####
     #% Swiggy one % orders
     Swiggy_one_perc = len(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0])/len(df_coupon)
-    discount.subheader("Swiggy One Share")
+    #discount.subheader("Swiggy One Share")
     #discount.write(round(Swiggy_one_perc*100,2))
     discount.metric("Swiggy One Share", round(Swiggy_one_perc*100,2))
     #print(round(Swiggy_one_perc*100,2))
@@ -364,8 +364,8 @@ if True:
     
     #Swiggyone_payout lost profit
     #df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()*diff_payout_swiggyone
-    discount.subheader("Swiggy One Additional Discount")
-    discount.write(round(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum(),2))
+    #discount.subheader("Swiggy One Additional Discount")
+    #discount.write(round(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum(),2))
     discount.metric("Swiggy One Additional Discount", round(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum(),2))
     #print(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum())
     ####################################################################################################################################
