@@ -318,6 +318,8 @@ if True:
     #main_dashboard.write(average_payout)
 
     ###################Coupon Analysis#################################
+    discount.dataframe(df.head())
+    discount.dataframe(df_1.head())
     df_coupon = pd.merge(df, df_1, on='Order ID')
     #pd.DataFrame(df_coupon).to_csv('master_swiggy.csv')
 
