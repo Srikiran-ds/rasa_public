@@ -331,7 +331,7 @@ if True:
     coupon_avgpayout['payout'] = df_coupon.groupby('Coupon type applied by customer')['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum().reset_index()['Net Payout for Order (after taxes)\n[A-B-C-D]']
     coupon_avgpayout['avg_order_value'] = df_coupon.groupby('Coupon type applied by customer')['Item Total'].mean().reset_index()['Item Total']
     coupon_avgpayout.sort_values(by=['payout ratio'], inplace= True)
-
+    coupon_avgpayout['payout ratio'] = coupon_avgpayout['payout ratio'].map('{:.2%}'.format)
     #low payout coupons
     low_coupons = coupon_avgpayout[(coupon_avgpayout['payout ratio']<0.5) & (coupon_avgpayout['payout']>1000)]
     discount.subheader("Low performing coupons")
