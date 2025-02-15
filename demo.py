@@ -318,6 +318,9 @@ if True:
     #main_dashboard.write(average_payout)
 
     ###################Coupon Analysis#################################
+    
+    df_1['Order ID'] = pd.to_numeric(df_1['Order ID'], errors='coerce')
+    df['Order ID'] = pd.to_numeric(df['Order ID'], errors='coerce')
     discount.dataframe(df.head())
     discount.dataframe(df_1.head())
     df_coupon = pd.merge(df, df_1, on='Order ID')
