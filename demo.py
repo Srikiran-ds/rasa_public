@@ -65,7 +65,7 @@ if True:
 
 # Creating tabs
 
-    main_dashboard,input_files,costing,item_wise_payout=st.tabs(["Executive Dashboard","Input Files","Costing","Item Wise Analysis"])
+    main_dashboard,input_files,costing,item_wise_payout,discount=st.tabs(["Executive Dashboard","Input Files","Costing","Item Wise Analysis","Coupon Analysis"])
 
     #placeholder = main_dashboard.empty()
     uploaded_file_annexure = input_files.file_uploader("Choose a annexure file", type = 'xlsx',accept_multiple_files=True)
@@ -157,7 +157,7 @@ if True:
 
     #Metrics
     main_dashboard.subheader("Orders Summary")
-    col1, col2,col1_3 = main_dashboard.columns(3)
+    col1, col2,col1_3,col1_4 = main_dashboard.columns(4)
     col1.metric("Orders", len(df))
     col2.metric("Sale", round(df['Item Total'].sum(),2))
     col1_3.metric("Cancelled Orders(%)", round(Cancelled_perc*100,2))
@@ -234,6 +234,9 @@ if True:
     # Reshape the data using melt
     df_melted = df_1.melt(id_vars='Order ID', value_vars=['item1', 'item2', 'item3','item4', 'item5', 'item6'], 
                         var_name='Item_Column', value_name='Item')
+    item_order_ratio = len(df_melted)/len(df_1)
+    col1_4.metric("Items to Order", round(item_order_ratio,2))
+    #col1_4.print(item_order_ratio)
 
     # Filter out empty rows
     df_melted = df_melted.dropna()
@@ -291,8 +294,8 @@ if True:
     col6, col7 = main_dashboard.columns(2)
     number_cost = col6.number_input("Fixed Costs",value=300000)
     offline = col6.number_input("Offline",value=50000)
-
-    col7.metric("Target Orders Per Day",round((number_cost-offline)/30/1.7/avg_payout))
+    
+    col7.metric("Target Orders Per Day",round((number_cost-offline)/30/item_order_ratio/avg_payout))
 
     #df.groupby('Order Date').size().mean()*avg_payout/round(number/30/1.25/avg_payout)
 
@@ -308,3 +311,46 @@ if True:
     item_wise_payout.header("Item Wise Payout")
     item_wise_payout.dataframe(average_payout.sort_values('avg_payout', ascending=False))
     #main_dashboard.write(average_payout)
+
+    ###################Coupon Analysis#################################
+    df_coupon = pd.merge(df, df_1, on='Order ID')
+    #pd.DataFrame(df_coupon).to_csv('master_swiggy.csv')
+
+    #couponwise avg payout
+    coupon_avgpayout = df_coupon.groupby('Coupon type applied by customer')['payout ratio'].mean().reset_index()
+    coupon_avgpayout['payout'] = df_coupon.groupby('Coupon type applied by customer')['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum().reset_index()['Net Payout for Order (after taxes)\n[A-B-C-D]']
+    coupon_avgpayout['avg_order_value'] = df_coupon.groupby('Coupon type applied by customer')['Item Total'].mean().reset_index()['Item Total']
+    coupon_avgpayout.sort_values(by=['payout ratio'], inplace= True)
+
+    #low payout coupons
+    low_coupons = coupon_avgpayout[(coupon_avgpayout['payout ratio']<0.5) & (coupon_avgpayout['payout']>1000)]
+    discount.subheader("Low performing coupons")
+    discount.dataframe(low_coupons)
+
+    #high payout coupons
+    high_coupons = coupon_avgpayout[(coupon_avgpayout['payout ratio']>0.5) & (coupon_avgpayout['payout']>1000)]
+    discount.subheader("High performing coupons")
+    discount.dataframe(high_coupons)
+
+    ####Swiggyone impact####
+    #% Swiggy one % orders
+    Swiggy_one_perc = len(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0])/len(df_coupon)
+    discount.subheader("Swiggy One Share")
+    discount.write(round(Swiggy_one_perc*100,2))
+    #print(round(Swiggy_one_perc*100,2))
+    
+    #% Swiggy one vs Non-swiggy one
+    swiggyone_payout = df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['payout ratio'].mean()
+    non_swiggyone_payout = df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']==0]['payout ratio'].mean()
+    
+    diff_payout_swiggyone = non_swiggyone_payout - swiggyone_payout
+    discount.subheader("Swiggy One Additional Discount %")
+    discount.write(round(diff_payout_swiggyone*100,2))
+    #print(round(diff_payout_swiggyone*100,2))
+    
+    #Swiggyone_payout lost profit
+    df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum()*diff_payout_swiggyone
+    discount.subheader("Swiggy One Additional Discount")
+    discount.write(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum())
+    #print(df_coupon[df_coupon['Swiggy One \nExclusive Offer Discount']>0]['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum())
+    ####################################################################################################################################
