@@ -319,8 +319,8 @@ if True:
 
     ###################Coupon Analysis#################################
     
-    df_1['Order ID'] = pd.to_numeric(df_1['Order ID'], errors='coerce')
-    df['Order ID'] = pd.to_numeric(df['Order ID'], errors='coerce')
+    #df_1['Order ID'] = pd.to_numeric(df_1['Order ID'], errors='coerce')
+    #df['Order ID'] = pd.to_numeric(df['Order ID'], errors='coerce')
     discount.dataframe(df.head())
     discount.dataframe(df_1.head())
     df_coupon = pd.merge(df, df_1, on='Order ID')
@@ -331,15 +331,17 @@ if True:
     coupon_avgpayout['payout'] = df_coupon.groupby('Coupon type applied by customer')['Net Payout for Order (after taxes)\n[A-B-C-D]'].sum().reset_index()['Net Payout for Order (after taxes)\n[A-B-C-D]']
     coupon_avgpayout['avg_order_value'] = df_coupon.groupby('Coupon type applied by customer')['Item Total'].mean().reset_index()['Item Total']
     coupon_avgpayout.sort_values(by=['payout ratio'], inplace= True)
-    coupon_avgpayout['payout ratio'] = coupon_avgpayout['payout ratio'].map('{:.2%}'.format)
+    #coupon_avgpayout['payout ratio'] = coupon_avgpayout['payout ratio'].map('{:.2%}'.format)
     #low payout coupons
     low_coupons = coupon_avgpayout[(coupon_avgpayout['payout ratio']<0.5) & (coupon_avgpayout['payout']>1000)]
+    low_coupons['payout ratio'] = low_coupons['payout ratio'].map('{:.2%}'.format)
     discount.subheader("Low performing coupons")
     discount.dataframe(low_coupons)
 
     #high payout coupons
     high_coupons = coupon_avgpayout[(coupon_avgpayout['payout ratio']>0.5) & (coupon_avgpayout['payout']>1000)]
     discount.subheader("High performing coupons")
+    high_coupons['payout ratio'] = high_coupons['payout ratio'].map('{:.2%}'.format)
     discount.dataframe(high_coupons)
 
     ####Swiggyone impact####
