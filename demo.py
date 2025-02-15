@@ -234,12 +234,17 @@ if True:
     # Reshape the data using melt
     df_melted = df_1.melt(id_vars='Order ID', value_vars=['item1', 'item2', 'item3','item4', 'item5', 'item6'], 
                         var_name='Item_Column', value_name='Item')
+    
+
+    # Filter out empty rows
+    df_melted = df_melted.dropna()
+    
+    #Item order ratio
     item_order_ratio = len(df_melted)/len(df_1)
     col1_4.metric("Items to Order", round(item_order_ratio,2))
     #col1_4.print(item_order_ratio)
 
-    # Filter out empty rows
-    df_melted = df_melted.dropna()
+    
     df_melted[['Item_name','temp','Qty','Price']] = df_melted['Item'].str.split("_",expand=True)
     #df_melted[['Price','Type','addon']] = df_melted['Price'].str.split("+",expand=True)
     #df_melted['Type'] = df_melted['Type'].fillna(value="")
